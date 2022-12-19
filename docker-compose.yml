@@ -1,0 +1,60 @@
+version: '3.5'
+
+# After adding this action to your domain file, 
+# re-train your model with rasa train --force. Otherwise 
+# Rasa won't know you've changed anything and may skip 
+# re-training your dialogue model.
+# command: train --force && run --enable-api --cors "*" --port 5045
+
+services:
+  rasa:
+    container_name: rasa
+    hostname: rasa
+    build:
+      context: .
+      dockerfile: ./docker/rasa/Dockerfile
+    ports:
+      - "5045:5045"
+    volumes:
+      - "/home/dgonzalez@grantecan.net/Documents/instalacion_conectada/rasaprojects/Gara_voice_interface:/app"
+    # command: run --enable-api --cors "*" --port 5045
+    networks:
+      rasanetwork:
+        ipv4_address: 172.21.2.37
+
+# Python SDK for the development of custom actions for Rasa.
+  action_server:
+    container_name: action_server
+    hostname: action_server
+    build:
+      context: .
+      dockerfile: ./docker/actions_server/Dockerfile
+    ports:
+      - "5055:5055"
+    depends_on:
+      - rasa
+    volumes:
+      - "/home/dgonzalez@grantecan.net/Documents/instalacion_conectada/rasaprojects/Gara_voice_interface/actions:/app/actions"
+    # command: "start --actions actions --port 5055"
+    networks:
+      rasanetwork:
+        ipv4_address: 172.21.2.38
+
+# Duckling is a Haskell library that parses text into structured data.
+  # duckling:
+  #   image: rasa/duckling:latest
+  #   ports:
+  #     - "8000:8000"
+  #   networks:
+  #     rasanetwork:
+  #       ipv4_address: 172.21.2.39
+
+networks:
+  rasanetwork:
+    ipam:
+      config:
+        - subnet: 172.21.2.0/24
+
+volumes:
+  rasa: ~
+  # action_server: ~

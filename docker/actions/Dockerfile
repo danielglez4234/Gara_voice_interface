@@ -1,3 +1,0 @@
-# ---
-# Rasa actions server
-# ---
