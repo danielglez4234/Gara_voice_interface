@@ -6,7 +6,7 @@
 
 
 # This is a simple example for a custom action which utters "Hello World!"
-
+import datetime as dt
 from typing import Any, Text, Dict, List
 
 from rasa_sdk import Action, Tracker
@@ -17,8 +17,48 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.types import DomainDict
 from rasa_sdk.events import SessionStarted, ActionExecuted
 
+# After adding this action to your domain file, 
+# re-train your model with rasa train --force. Otherwise 
+# Rasa won't know you've changed anything and may skip 
+# re-training your dialogue model.
+# command: train --force && run --enable-api --cors "*" --port 5045
 
-class SessionStart():
+# CollectingDispatcher -> send messages back to the user
+# Tracker -> Fetch information: contains relevent data that was strac for the conversation so far (Intent, Entities, Conversation, Sofar)
+# Domain -> access to data defain on yaml file (domain.yml)
+
+class ActionShowTime(Action):
+    def name(self) -> Text:
+        return "action_show_time"
+    
+    async def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+
+        dispatcher.utter_message(text=f"{dt.datetime.now()}")
+        return []
+
+
+class ActionTestActions(Action):
+    def name(self) -> Text:
+        return "action_test_actions"
+
+    async def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+    
+        dispatcher.utter_message(text="Testing...")
+        print("Testing...")
+        return []
+
+
+class SessionStart(Action):
     def name(self) -> Text:
         return "action_session_start"
 
@@ -68,6 +108,7 @@ class ActionGreet(Action):
 
         return []
 
+
 class ActionPresentation(Action):
     
     def name(self) -> Text:
@@ -76,4 +117,7 @@ class ActionPresentation(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        dispatcher.utter_message("it works")
+        
+        dispatcher.utter_message(text="it works")
+        
+        return []
