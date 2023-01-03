@@ -1,14 +1,10 @@
 version: "3.1"
-
 nlu:
-
-# fallback out_of_scope
 - intent: out_of_scope
   examples: |
     - I want to order food
     - What is 2 + 2?
     - Who's the US President?
-
 - intent: greet
   examples: |
     - hey
@@ -24,7 +20,6 @@ nlu:
     - goodmorning
     - goodevening
     - good afternoon
-
 - intent: goodbye
   examples: |
     - cu
@@ -37,7 +32,6 @@ nlu:
     - see you around
     - bye bye
     - see you later
-
 - intent: affirm
   examples: |
     - yes
@@ -46,7 +40,6 @@ nlu:
     - of course
     - that sounds good
     - correct
-
 - intent: deny
   examples: |
     - no
@@ -56,52 +49,29 @@ nlu:
     - don't like that
     - no way
     - not really
-
-# - intent: mood_great
-#   examples: |
-#     - perfect
-#     - great
-#     - amazing
-#     - feeling like a king
-#     - wonderful
-#     - I am feeling very good
-#     - I am great
-#     - I am amazing
-#     - I am going to save the world
-#     - super stoked
-#     - extremely good
-#     - so so perfect
-#     - so good
-#     - so perfect
-
-# - intent: mood_unhappy
-#   examples: |
-#     - my day was horrible
-#     - I am sad
-#     - I don't feel very well
-#     - I am disappointed
-#     - super sad
-#     - I'm so sad
-#     - sad
-#     - very sad
-#     - unhappy
-#     - not good
-#     - not very good
-#     - extremly sad
-#     - so saad
-#     - so sad
-
+- intent: give_time
+  examples: |
+    - can you tell me what time is it
+    - tell me the time
+    - got the time
+    - what time is it
+    - what time is it?
+    - give me the time
+    - time
 - intent: bot_challenge
   examples: |
     - are you a bot?
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
-
-# New Added
-
 - intent: how_to_get_started
   examples: |
     - how do I get started
     - what can I do
     - start
+    - how do I geet started
+- intent: test_intents
+  examples: |
+    - test
+    - run test
+    - intent test

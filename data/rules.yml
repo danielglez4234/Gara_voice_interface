@@ -23,20 +23,30 @@ rules:
 
 - rule: Say goodbye anytime the user says goodbye
   steps:
-    - intent: goodbye
-    - action: utter_goodbye
+  - intent: goodbye
+  - action: utter_goodbye
 
 - rule: Say 'I am a bot' anytime the user challenges
   steps:
-    - intent: bot_challenge
-    - action: utter_iamabot
+  - intent: bot_challenge
+  - action: utter_iamabot
 
 - rule: greet
   steps:
-    - intent: greet
-    - action: action_greet
+  - intent: greet
+  - action: action_greet
 
 - rule: getting started
   steps:
-    - intent: how_to_get_started
-    - action: action_presentation
+  - intent: how_to_get_started
+  - action: action_presentation
+
+- rule: Tell me the time
+  steps:
+  - intent: give_time
+  - action: action_show_time
+
+- rule: test actions intent
+  steps:
+  - intent: test_intents
+  - action: action_test_actions
