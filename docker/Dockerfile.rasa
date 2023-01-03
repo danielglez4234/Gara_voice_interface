@@ -19,11 +19,14 @@ RUN chgrp -R root /app/* && chmod -R 770 /app/*
 # Train a nlu whitout using the load models (uncomment if you dont have any models)
 RUN rasa train nlu
 
+# RUN rasa train -c ./config.yml -d ./domain.yml --data ./data --debug 
+
 # Set entrypoint for interactive shells
 ENTRYPOINT [ "rasa" ]
 
 # Command to run when the container is up
-CMD ["run", "--enable-api", "--port", "5005"]
+# CMD ["run", "--enable-api", "--cors", "*", "--port", "5045"]
+# CMD [ "run", "-m", "/app/models", "--enable-api", "--cors", "*", "--port", "5045", "--debug" ]
 
 # By best practices, don't run the code with root user
-USER 1001
+# USER 1001

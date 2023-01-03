@@ -1,53 +1,78 @@
 version: '3.5'
 
-# After adding this action to your domain file, 
-# re-train your model with rasa train --force. Otherwise 
-# Rasa won't know you've changed anything and may skip 
-# re-training your dialogue model.
-# command: train --force && run --enable-api --cors "*" --port 5045
-
 services:
   rasa:
-    container_name: rasa
-    hostname: rasa
     build:
       context: .
-      dockerfile: ./docker/rasa/Dockerfile
+      dockerfile: ./docker/Dockerfile.rasa
+    container_name: rasa
+    hostname: rasa
     ports:
-      - "5045:5045"
+      - "5045"
+    # depends_on:
+    #   - mongo
+    command: ["run", "-m", "/app/models", "--enable-api", "--cors", "*", "--port", "5045", "--debug"]
     volumes:
-      - "/home/dgonzalez@grantecan.net/Documents/instalacion_conectada/rasaprojects/Gara_voice_interface:/app"
-    # command: run --enable-api --cors "*" --port 5045
+      - ".:/app"
     networks:
       rasanetwork:
         ipv4_address: 172.21.2.37
 
 # Python SDK for the development of custom actions for Rasa.
   action_server:
-    container_name: action_server
-    hostname: action_server
     build:
       context: .
-      dockerfile: ./docker/actions_server/Dockerfile
+      dockerfile: ./docker/Dockerfile.action_server
+    container_name: action_server
+    hostname: action_server
     ports:
-      - "5055:5055"
+      - "5055"
     depends_on:
       - rasa
+    command: ["start", "--actions", "actions", "--port", "5055"]
     volumes:
-      - "/home/dgonzalez@grantecan.net/Documents/instalacion_conectada/rasaprojects/Gara_voice_interface/actions:/app/actions"
-    # command: "start --actions actions --port 5055"
+      - "./actions:/app/actions"
     networks:
       rasanetwork:
         ipv4_address: 172.21.2.38
 
+# Python script to recognize the voice and parse it to text to send it to the rasa api
+  # speechToText: 
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/Dockerfile.speechTotext
+  #   container_name: speechToText
+  #   hostname: speechToText
+  #   ports:
+  #     - "5056"
+  #   depends_on:
+  #     - action_server
+  #   volumes:
+  #     - "./speechToText:/"
+  #   networks:
+  #     rasanetwork:
+  #       ipv4_address: 172.21.2.39
+
+# MongoDB 
+  # mongo:
+  #   image: "mongo:3.7-jessie"
+  #   container_name: "mongo"
+  #   expose:
+  #     - "27017"
+  #   volumes:
+  #     - ./mongo:/data/db
+
 # Duckling is a Haskell library that parses text into structured data.
+# image: rasa/duckling:latest
   # duckling:
-  #   image: rasa/duckling:latest
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/Dockerfile.duckling
   #   ports:
   #     - "8000:8000"
   #   networks:
   #     rasanetwork:
-  #       ipv4_address: 172.21.2.39
+  #       ipv4_address: 172.21.2.40
 
 networks:
   rasanetwork:
@@ -57,4 +82,4 @@ networks:
 
 volumes:
   rasa: ~
-  # action_server: ~
+  action_server: ~
